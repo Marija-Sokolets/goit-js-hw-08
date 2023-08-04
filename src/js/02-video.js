@@ -4,16 +4,12 @@ import throttle from 'lodash.throttle';
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
 
-    player.on('play', function() {
-        console.log('played the video!');
-    });
-
-const onPlay = function(data) {
-    // data is an object containing properties specific to that event
+const onPlay = function (data) {
+  localStorage.setItem('videoplayer-carrent-time', JSON.stringify(data.seconds));
 };
 
-player.on('play', onPlay);
+player.on('timeupdate', throttle(onPlay, 1000));
 
-const jqueryPlayer = new Vimeo.Player($('iframe'));
+const carrentTime = localStorage.getItem('videoplayer-carrent-time');
 
-const idPlayer = new Vimeo.Player('player1');
+player.setCurrentTime(carrentTime);
